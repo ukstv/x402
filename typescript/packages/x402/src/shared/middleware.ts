@@ -91,13 +91,14 @@ export function findMatchingRoute(
 export function getDefaultAsset(network: Network) {
   const chainId = getNetworkId(network);
   const usdc = getUsdcChainConfigForChain(chainId);
-  const address = usdc?.usdcAddress || "0x";
-  const name = usdc?.usdcName || "USDC";
+  if (!usdc) {
+    throw new Error(`Unable to get default asset on ${network}`);
+  }
   return {
-    address: address,
+    address: usdc.usdcAddress,
     decimals: 6,
     eip712: {
-      name: name,
+      name: usdc.usdcName,
       version: "2",
     },
   };
